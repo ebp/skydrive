@@ -21,7 +21,7 @@ module Skydrive
       @data.each do |object_data|
         if object_data["type"]
           @items << "Skydrive::#{object_data["type"].capitalize}".constantize.new(self, object_data)
-        elsif object_data["id"].match /^comment\..+/
+        elsif object_data["id"].match(/^comment\..+/)
           @items << Skydrive::Comment.new(client, object_data)
         end
       end
