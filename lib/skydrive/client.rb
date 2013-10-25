@@ -15,7 +15,7 @@ module Skydrive
       define_method(method.to_sym) do |url, options = {}|
         query      = { access_token: @access_token.token }.update( options.fetch( :query, {} ) )
         options    = options.merge( query: query )
-        return_raw = options.delete( :raw, false )
+        return_raw = options.delete( :raw )
         response   = self.class.send(method, url, options)
 
         return_raw ? response : filtered_response(response)
