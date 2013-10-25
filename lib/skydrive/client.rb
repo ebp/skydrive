@@ -13,9 +13,12 @@ module Skydrive
 
     %w( get post put move delete ).each do |method|
       define_method(method.to_sym) do |url, options = {}|
-        query   = { access_token: @access_token.token }.update( options.fetch( :query, {} ) )
-        options = options.merge( query: query )
-        filtered_response(self.class.send(method, url, options))
+        query      = { access_token: @access_token.token }.update( options.fetch( :query, {} ) )
+        options    = options.merge( query: query )
+        return_raw = options.delete( :raw, false )
+        response   = self.class.send(method, url, options)
+
+        return_raw ? response : filtered_response(response)
       end
     end
 
