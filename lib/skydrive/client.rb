@@ -42,6 +42,13 @@ module Skydrive
       end
     end
 
+    def search_files(file_query, options = {})
+      options = options.dup
+      options[:query] ||= {}
+      options[:query].update(q: file_query.to_s)
+      get("/me/skydrive/search", options)
+    end
+
     def upload(remote_path, file_name, content)
       file_name = file_name.to_s
       content   = content.respond_to?(:read) ? content.read.to_s : content.to_s
