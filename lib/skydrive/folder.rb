@@ -10,7 +10,7 @@ module Skydrive
     # @option options [String] :sort_order set the item's sort order. Can be 'ascending or descending'
     # @return [Skydrive::Collection]
     def files options={}
-      response = client.get("/#{id}/files")
+      response = client.get("/#{id}/files", query: options)
     end
 
     # Get all the photos in the folder
@@ -21,7 +21,7 @@ module Skydrive
     # @option options [String] :sort_order set the item's sort order. Can be 'ascending or descending'
     # @return [Skydrive::Collection]
     def photos options={}
-      response = client.get("/#{id}/photos", options)
+      response = client.get("/#{id}/photos", query: options)
     end
 
     # Get all the videos in the folder
@@ -32,7 +32,7 @@ module Skydrive
     # @option options [String] :sort_order set the item's sort order. Can be 'ascending or descending'
     # @return [Skydrive::Collection]
     def videos options={}
-      response = client.get("/#{id}/videos", options)
+      response = client.get("/#{id}/videos", query: options)
     end
 
     # Delete the folder
@@ -46,7 +46,7 @@ module Skydrive
     # @option options [String] :description Description for the folder
     # @return [Skydrive::Folder] the updated folder object
     def update options={}
-      client.put("/#{id}", options)
+      client.put("/#{id}", query: options)
     end
   end
 end

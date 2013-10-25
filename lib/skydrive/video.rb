@@ -4,7 +4,8 @@ module Skydrive
     # The link that can be used to download the video file
     # @return [String]
     def download_link
-      url = client.get("/#{id}/content", :download => true, :suppress_redirects => true)["location"]
+      params = { download: true, suppress_redirects: true }
+      url = client.get("/#{id}/content", query: params)["location"]
     end
 
     # Download the video file

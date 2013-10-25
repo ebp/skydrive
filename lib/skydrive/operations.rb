@@ -1,7 +1,7 @@
 module Skydrive
   # The basic operations
   module Operations
-    
+
     # Your home folder
     # @return [Skydrive::Folder]
     def my_skydrive
@@ -117,7 +117,7 @@ module Skydrive
     # @option options [String] :name The friendly name of the object
     # @option options [String] :description The description text about the object
     def update_skydrive_object object_id, options={}
-      response = put("/#{object_id}", options)
+      response = put("/#{object_id}", query: options)
     end
 
 
@@ -141,7 +141,7 @@ module Skydrive
     # @option options [String] :description the description about the folder
     # @return [Skydrive::Folder] the new folder
     def create_folder path, options={}
-      response = post("/#{path}", options)
+      response = post("/#{path}", query: options)
     end
 
     # Create a new album. Albums can only be created in the path '/me/albums', so no need to pass the path as a parameter
@@ -150,7 +150,7 @@ module Skydrive
     # @option options [String] :description the description about the album
     # @return [Skydrive::Album] the new album
     def create_album options={}
-      response = post("/me/albums", options)
+      response = post("/me/albums", query: options)
     end
 
     # Get comments associated with an object
@@ -171,7 +171,7 @@ module Skydrive
     # @param [Hash] options
     # @option options [String] :message The comment message
     def create_comment object_id, options={}
-      response = post("/#{object_id}/comments", options)
+      response = post("/#{object_id}/comments", query: options)
     end
 
   end

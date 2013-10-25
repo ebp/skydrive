@@ -1,10 +1,11 @@
 module Skydrive
   # The class that handles the errors
   class Error < StandardError
-    attr_reader :code, :error_message, :message
-    def initialize error
+    attr_reader :code, :error_message, :message, :response
+    def initialize error, response = nil
       @code = error["code"]
       @error_message = error["message"]
+      @response = response
     end
 
     def message

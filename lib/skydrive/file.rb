@@ -5,7 +5,7 @@ module Skydrive
     # The file size
     # @return [String]
     def size
-      object["size"]      
+      object["size"]
     end
 
     # The number of comments associated with the file
@@ -29,7 +29,8 @@ module Skydrive
     # The link that can be used to download the file
     # @return [String]
     def download_link
-      url = client.get("/#{id}/content", :download => true, :suppress_redirects => true)["location"]
+      params = { download: true, suppress_redirects: true }
+      url = client.get("/#{id}/content", query: params)["location"]
     end
 
     # Download the file

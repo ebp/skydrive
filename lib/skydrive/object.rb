@@ -61,6 +61,12 @@ module Skydrive
       object["upload_location"]
     end
 
+    # The path portion of the URL to pass to client.upload
+    # @return [String]
+    def upload_path
+      upload_location.to_s.sub(client.class.base_uri, '')
+    end
+
     # The ID of the parent object
     # @return [String]
     def parent_id
@@ -88,7 +94,7 @@ module Skydrive
     # Delete the object from Skydrive
     def delete
       client.delete("/#{id}")
-    end 
+    end
 
     # A value that indicates whether this object can be embedded
     # @return [Boolean]
@@ -104,7 +110,7 @@ module Skydrive
 
     # Make a comment about the object
     # @param [Hash] options
-    # @option options [String] :message The comment 
+    # @option options [String] :message The comment
     def comment options={}
       client.post("/#{id}/comments", options)
     end

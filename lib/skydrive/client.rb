@@ -13,8 +13,9 @@ module Skydrive
 
     %w( get post put move delete ).each do |method|
       define_method(method.to_sym) do |url, options = {}|
-        options = { access_token: @access_token.token }.update(options)
-        filtered_response(self.class.send(method, url, query: options))
+        query   = { access_token: @access_token.token }.update( options.fetch( :query, {} ) )
+        options = options.merge( query: query )
+        filtered_response(self.class.send(method, url, options))
       end
     end
 
@@ -38,6 +39,22 @@ module Skydrive
       end
     end
 
+    def upload(remote_path, file_name, content)
+      file_name = file_name.to_s
+      content   = content.respond_to?(:read) ? content.read.to_s : content.to_s
+      nl        = "\r\n"
+      boundary  = 'A300x'
+      body      = ''
+      body << '--' << boundary << nl
+      body << 'Content-Disposition: form-data; name="file"; filename=' << file_name.dump << nl
+      body << 'Content-Type: application/octet-stream' << nl << nl
+      body << content << nl
+      body << '--' << boundary << '--' << nl
+
+      headers = { 'Content-Type' => "multipart/form-data; boundary=#{ boundary }" }
+      post(remote_path, headers: headers, body: body, format: :plain)
+    end
+
     private
 
     # Filter the response after checking for any errors
@@ -46,7 +63,7 @@ module Skydrive
       if response.success?
         filtered_response = response.parsed_response
         if response.response.code == "200"
-          raise Skydrive::Error.new(filtered_response["error"]) if filtered_response["error"]
+          raise Skydrive::Error.new(filtered_response["error"], response) if filtered_response["error"]
           if filtered_response["data"]
             return Skydrive::Collection.new(self, filtered_response["data"])
           elsif filtered_response["location"]
@@ -62,7 +79,7 @@ module Skydrive
           return true
         end
       else
-        raise Skydrive::Error.new("code" => "http_error_#{response.response.code}", "message" => response.response.message)
+        raise Skydrive::Error.new({"code" => "http_error_#{response.response.code}", "message" => response.response.message}, response)
       end
     end
 
